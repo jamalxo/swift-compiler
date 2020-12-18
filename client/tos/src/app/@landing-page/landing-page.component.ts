@@ -23,7 +23,7 @@ export class LandingPageComponent {
   @ViewChild('test') test: ElementRef;
 
   initialScript =
-    'import Swift\nimport Foundation\nprint("Hello, World!");\nfofr index in 1...2 {\n    usleep(1000000);\n    print("\\(index) times 5 is \\(index * 5)")\n};';
+    'import Swift\nimport Foundation\nprint("Hello, World!");\nfor index in 1...2 {\n    usleep(1000000);\n    print("\\(index) times 5 is \\(index * 5)")\n};';
 
   output = '';
   isCompiling = 0;

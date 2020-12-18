@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const fs = require('fs');
-const exec = require('child_process').exec;
-const spawn = require('child_process').spawn;
 var child_process = require('child_process');
 
 
@@ -16,11 +14,7 @@ router.post("/exec", async (req, res) => {
         script
     } = req.body;
     try {
-        data = "import Swift\n import Foundation\n print(\"Hello, World!\");\n for index in 1...2 {\n" +
-            "usleep(1000000);  print(\"\\(index) times 5 is \\(index * 5)\")\n" +
-            "}; exit(0)\n";
-        data = script;
-        await fs.writeFile('./scripts/foo.swift', data, function (err) {
+        await fs.writeFile('./scripts/foo.swift', script, function (err) {
             if (err) return console.log(err);
             console.log('Writing File...');
         });
@@ -29,7 +23,6 @@ router.post("/exec", async (req, res) => {
             console.log("Process Finished.");
             console.log('closing code: ' + exit_code);
             console.log('Full output of script: ',output);
-            // test = output.replace(/foo/, '#foo')
             error = output.split('foo.');
             error.shift()
             res.json({output, exitCode: exit_code, error})

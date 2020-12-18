@@ -1,11 +1,11 @@
 # How to setup
 
 # Client
-cd client/tos
+cd client/tos  
 npm i  
 ng serve
 
 # Server
-cd server 
-npm i 
+cd server  
+npm i  
 nodemon index.js
