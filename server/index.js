@@ -1,7 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const InitiateMongoServer = require("./config/db");
-const user = require("./routes/user");
+const script = require("./script/scriptController");
 var cors = require('cors')
 
 // get env vars
@@ -9,7 +8,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 // Initiate Mongo Server
-InitiateMongoServer();
+// InitiateMongoServer();
 
 const app = express();
 
@@ -35,7 +34,7 @@ app.get("/", (req, res) => {
  * Router - /user/*
  * Method - *
  */
-app.use("/user", user);
+app.use("/script", script);
 
 app.listen(PORT, (req, res) => {
     console.log(`Server Started at PORT ${PORT}`);

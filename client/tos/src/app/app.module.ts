@@ -9,7 +9,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { LandingPageModule } from './@landing-page/landing-page.module';
 import { JwtModule } from '@auth0/angular-jwt';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { OverviewModule } from './@overview/overview.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -20,7 +19,6 @@ import { OverviewModule } from './@overview/overview.module';
     BrowserAnimationsModule,
     LandingPageModule,
     SharedModule,
-    OverviewModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: function tokenGetter() {

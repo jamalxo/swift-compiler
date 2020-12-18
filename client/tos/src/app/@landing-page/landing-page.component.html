@@ -1,9 +1,57 @@
 <div class="container mt-5">
-  <!-- Login -->
-  <tos-login></tos-login>
+  <div class="row">
+    <!-- Input -->
+    <div class="col vh-50">
+      <form [formGroup]="scriptForm">
+        <mat-form-field appearance="fill" class="w-100 h-100">
+          <mat-label>Textarea</mat-label>
+          <textarea #input class="h-50" formControlName="script" matInput cdkTextareaAutosize
+                    cdkAutosizeMinRows="40"
+                    cdkAutosizeMaxRows="100"
+                    spellcheck="false"
+          ></textarea>
+        </mat-form-field>
+      </form>
+      <div align="end">
+        <button mat-button (click)="onSubmit()">Compile</button>
+      </div>
+    </div>
 
-  <!-- Register -->
-  <p class="text-center">Not a member?
-    <a class="text-primary btn" (click)="openModal()">Register</a>
-  </p>
+    <!-- Output -->
+    <div class="col">
+      <div *ngIf="shouldSpin">
+        <div class="col">
+          <mat-spinner style="margin-left: 150px" mode="indeterminate">
+          </mat-spinner>
+          <span style="margin-left: 165px;"> Compiling... </span>
+        </div>
+      </div>
+      <div class="col" *ngIf="!shouldSpin">
+        <mat-form-field *ngIf="exitCode === 0" appearance="fill" class="w-100 h-100">
+          <mat-label>Textarea</mat-label>
+          <textarea class="h-50" [value]="output" matInput cdkTextareaAutosize disabled
+                    cdkAutosizeMinRows="40"
+                    cdkAutosizeMaxRows="100">
+          </textarea>
+        </mat-form-field>
+        <div *ngIf="exitCode !== 0">
+          <mat-list *ngIf="exitCode !== 0">
+            <mat-list-item style="color: red">
+              Exit Code is: {{exitCode}}
+            </mat-list-item>
+            <mat-list-item *ngFor="let error of errorsByPos" style="height: fit-content; margin-bottom: 5px">
+              <div class="col">
+                <div
+                  (click)="goToError(error.lineChar.line, error.lineChar.char)"
+                  style="text-decoration: underline; cursor: pointer"
+                >{{error.pos}}</div>
+                <div>{{error.msg}}</div>
+              </div>
+            </mat-list-item>
+          </mat-list>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
