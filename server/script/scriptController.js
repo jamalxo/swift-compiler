@@ -35,27 +35,30 @@ router.post("/exec", async (req, res) => {
 function run_script(command, callback) {
     console.log("Starting Process.");
     var child = child_process.spawn(command , {
-        // stdio: 'inherit',
-        shell: true,
-        detached: true,
-        stdio: ['pipe']
+        shell: '/bin/bash',
+
+        // detached: true,
+        stdio: ['pipe', 'pipe', 'pipe']
     })
+    child.unref();
 
     var scriptOutput = "";
     var error = [];
 
-    // child.stdout.setEncoding('utf8');
+    child.stdout.setEncoding('utf8');
     child.stdout.on('data', function(data) {
         console.log('stdout: ' + data);
 
         data=data.toString();
         scriptOutput+=data;
+
+        // send live data
+        global.io.emit('script', { script: data });
     });
 
-    // child.stderr.setEncoding('utf8');
+    child.stderr.setEncoding('utf8');
     child.stderr.on('data', function(data) {
         console.log('stderr: ' + data);
-        console.log('---')
 
         data=data.toString();
         scriptOutput+=data;

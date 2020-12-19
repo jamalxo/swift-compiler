@@ -2,15 +2,17 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const script = require("./script/scriptController");
 var cors = require('cors')
+const app = express();
+var socket = require('socket.io')
+options={
+    cors:true,
+    origins:["http://127.0.0.1:5347"],
+}
+
 
 // get env vars
 const dotenv = require('dotenv');
 dotenv.config();
-
-// Initiate Mongo Server
-// InitiateMongoServer();
-
-const app = express();
 
 // PORT
 const PORT = process.env.PORT || 3000;
@@ -31,11 +33,16 @@ app.get("/", (req, res) => {
 
 /**
  * Router Middleware
- * Router - /user/*
- * Method - *
  */
 app.use("/script", script);
 
-app.listen(PORT, (req, res) => {
+
+var server = app.listen(PORT, (req, res) => {
     console.log(`Server Started at PORT ${PORT}`);
+});
+
+let io = socket(server, options)
+global.io = io
+io.on('connection', function(socket){
+    console.log(`${socket.id} is connected`);
 });

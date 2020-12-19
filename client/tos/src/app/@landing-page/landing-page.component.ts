@@ -1,7 +1,8 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ScriptService } from '../@core/service/script/script.service';
+import { SocketioService } from '../@core/service/socketio/socketio.service';
 
 export interface Error {
   pos: string;
@@ -17,13 +18,25 @@ export interface Error {
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.scss'],
 })
-export class LandingPageComponent {
+export class LandingPageComponent implements OnInit {
   @ViewChild('input') input: ElementRef;
 
   @ViewChild('test') test: ElementRef;
 
+  socket: any;
+  outputs: string[] = [];
+
   initialScript =
-    'import Swift\nimport Foundation\nprint("Hello, World!");\nfor index in 1...2 {\n    usleep(1000000);\n    print("\\(index) times 5 is \\(index * 5)")\n};';
+    'import Swift\n' +
+    'import Foundation\n' +
+    '\n' +
+    'setbuf(__stdoutp, nil); // for live output\n' +
+    '\n' +
+    'print("Hello, World!");\n' +
+    'for index in 1...5 {\n' +
+    '    usleep(1000000);\n' +
+    '    print("\\(index) times 5 is \\(index * 5)")\n' +
+    '};';
 
   output = '';
   isCompiling = 0;
@@ -35,7 +48,19 @@ export class LandingPageComponent {
     script: new FormControl(this.initialScript, Validators.required),
   });
 
-  constructor(private router: Router, private scriptService: ScriptService) {}
+  constructor(
+    private router: Router,
+    private scriptService: ScriptService,
+    private socketioService: SocketioService
+  ) {}
+
+  ngOnInit(): void {
+    this.socket = this.socketioService.setupSocketConnection();
+    this.socket.on('script', (data: any) => {
+      console.log(data);
+      this.outputs.push(data.script);
+    });
+  }
 
   // convenience getter for easy access to form fields
   get f() {
@@ -64,6 +89,7 @@ export class LandingPageComponent {
         this.isCompiling = 2;
         this.errors = res.error;
         this.split();
+        this.outputs = [];
       },
       (error) => {
         console.log(error);
@@ -100,7 +126,10 @@ export class LandingPageComponent {
       return {
         pos,
         msg,
-        lineChar,
+        lineChar: {
+          line: lineChar[0],
+          char: lineChar[1],
+        },
       };
     });
   }

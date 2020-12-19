@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { LandingPageModule } from './@landing-page/landing-page.module';
 import { JwtModule } from '@auth0/angular-jwt';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SocketioService } from './@core/service/socketio/socketio.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -28,7 +29,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     }),
     NgbModule,
   ],
-  providers: [],
+  providers: [SocketioService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

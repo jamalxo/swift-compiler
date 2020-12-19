@@ -1,4 +1,5 @@
 <div class="container mt-5">
+  <span style="color: red"> NOTE: import Foundation and setbuf(__stdoutp, nil); are needed for the live output</span>
   <div class="row">
     <!-- Input -->
     <div class="col vh-50">
@@ -25,10 +26,18 @@
           </mat-spinner>
           <span style="margin-left: 165px;"> Compiling... </span>
         </div>
+
+        <!-- Live Output-->
+        <mat-list>
+          <span>Live Output:</span>
+          <mat-list-item *ngFor="let out of outputs">
+            {{out}}
+          </mat-list-item>
+        </mat-list>
       </div>
       <div class="col" *ngIf="!shouldSpin">
         <mat-form-field *ngIf="exitCode === 0" appearance="fill" class="w-100 h-100">
-          <mat-label>Textarea</mat-label>
+          <mat-label>Final Output</mat-label>
           <textarea class="h-50" [value]="output" matInput cdkTextareaAutosize disabled
                     cdkAutosizeMinRows="40"
                     cdkAutosizeMaxRows="100">
@@ -54,4 +63,5 @@
     </div>
   </div>
 </div>
+
 
